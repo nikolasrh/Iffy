@@ -3,24 +3,6 @@ using MaybeResult.Exceptions;
 
 namespace MaybeResult
 {
-    public static partial class Maybe
-    {
-        public static Maybe<T> Some<T>(T value)
-        {
-            return new Maybe<T>(value, true);
-        }
-
-        public static Maybe<T> None<T>()
-        {
-            return new Maybe<T>();
-        }
-
-        public static Maybe<T> Join<T>(Maybe<Maybe<T>> maybe)
-        {
-            return maybe.IsSome ? maybe.Value : Maybe.None<T>();
-        }
-    }
-
     public struct Maybe<T>
     {
         private readonly T value;
@@ -39,17 +21,27 @@ namespace MaybeResult
         public bool IsNone => !hasValue;
 
         public T ValueOrThrow => IsSome ? value : throw new ValueDoesNotExistException();
+    }
 
-        public T ValueOrFallback(T fallbackValue) => IsSome ? value : fallbackValue;
+    public static partial class Maybe
+    {
+        public static Maybe<T> Some<T>(T value) => new Maybe<T>(value, true);
 
-        public T ValueOrFallback(Func<T> fallbackValueFn) => IsSome ? value : fallbackValueFn();
+        public static Maybe<T> None<T>() => new Maybe<T>();
 
-        public Maybe<T> OrFallback(T fallbackValue) => Maybe.Some<T>(fallbackValue);
+        public static Maybe<T> Join<T>(this Maybe<Maybe<T>> maybe)
+        {
+            return maybe.IsSome ? maybe.Value : Maybe.None<T>();
+        }
 
-        public Maybe<T> OrFallback(Func<T> fallbackValueFn) => Maybe.Some<T>(fallbackValueFn());
+        public static Maybe<T2> Map<T1, T2>(this Maybe<T1> maybe, Func<T1, T2> fn)
+        {
+            return maybe.IsSome ? Maybe.Some(fn(maybe.Value)) : Maybe.None<T2>();
+        }
 
-        public Maybe<T> OrFallback(Maybe<T> fallbackResult) => fallbackResult;
-
-        public Maybe<T> OrFallback(Func<Maybe<T>> fallbackResultFn) => fallbackResultFn();
+        public static Maybe<T> Filter<T>(this Maybe<T> maybe, Func<T, Boolean> fn)
+        {
+            return maybe.IsSome && fn(maybe.Value) ? maybe : Maybe.None<T>();
+        }
     }
 }
