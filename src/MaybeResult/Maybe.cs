@@ -1,5 +1,5 @@
-using System;
 using MaybeResult.Exceptions;
+using System;
 
 namespace MaybeResult
 {
