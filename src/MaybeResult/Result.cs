@@ -41,6 +41,20 @@ namespace MaybeResult
             return new Result<T, TError>(error: error);
         }
 
+        public static Result<T, TError> Create<T, TError>(T value, TError error)
+        {
+            return value == null
+                ? Error<T, TError>(error)
+                : Ok<T, TError>(value);
+        }
+
+        public static Result<T, TError> Create<T, TError>(T? value, TError error) where T : struct
+        {
+            return value.HasValue
+                ? Ok<T, TError>(value.GetValueOrDefault())
+                : Error<T, TError>(error);
+        }
+
         public static Result<T, TError> Join<T, TError>(this Result<Result<T, TError>, TError> result)
         {
             return result.IsOk

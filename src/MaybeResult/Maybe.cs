@@ -29,6 +29,20 @@ namespace MaybeResult
 
         public static Maybe<T> None<T>() => new Maybe<T>();
 
+        public static Maybe<T> Create<T>(T value)
+        {
+            return value == null
+                ? None<T>()
+                : Some(value);
+        }
+
+        public static Maybe<T> Create<T>(T? value) where T : struct
+        {
+            return value.HasValue
+                ? Some(value.GetValueOrDefault())
+                : None<T>();
+        }
+
         public static Maybe<T> Join<T>(this Maybe<Maybe<T>> maybe)
         {
             return maybe.IsSome ? maybe.Value : Maybe.None<T>();
