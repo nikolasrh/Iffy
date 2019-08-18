@@ -1,6 +1,6 @@
 using System;
 
-namespace MaybeResult.Exceptions
+namespace Iffy.Exceptions
 {
     public class ErrorDoesNotExistException : Exception
     {

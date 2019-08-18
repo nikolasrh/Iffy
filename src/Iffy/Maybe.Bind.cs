@@ -1,6 +1,6 @@
 using System;
 
-namespace MaybeResult
+namespace Iffy
 {
     public static partial class Maybe
     {

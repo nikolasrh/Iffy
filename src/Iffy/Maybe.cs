@@ -1,7 +1,7 @@
-using MaybeResult.Exceptions;
+using Iffy.Exceptions;
 using System;
 
-namespace MaybeResult
+namespace Iffy
 {
     public struct Maybe<T>
     {
